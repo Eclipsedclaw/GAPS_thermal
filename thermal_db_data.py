@@ -40,7 +40,7 @@ def Tracker_T_vector():
     x = []
     y = []
     z = []
-    Real_Time = []
+    Real_Time = None
     for l in range(7):  # Assuming the range is from l=0 to l=6
         T_L = np.empty(shape=(0,))
         for r in range(6):  # Assuming the range is from r=0 to r=5
@@ -48,24 +48,27 @@ def Tracker_T_vector():
             for m in range(6):  # Assuming the range is from m=0 to m=5
                 module_name = f"@asictemp_l{l}r{r}m{m}"
                 table_names.append(module_name)
-                print(module_name, end='\r', flush=True)
                 Read_Out = get_data_from_table(module_name, ti, tf)
                 if(Read_Out == None):
-                    T_R = np.append(T_R, None)
+                    print(str(module_name) + " temperature is None")
+                    #T_R = np.append(T_R, None)
                 elif(float(Read_Out[1][0]) > -50 and float(Read_Out[1][0] < 30)):
+                    print(str(module_name) + " temperature is " + str(Read_Out[1][0]) + " C")
                     T_R = np.append(T_R, Read_Out[1][0])
                     x.append(r)
                     y.append(m)
                     z.append(9-l)
+                else:
+                    print(str(module_name) + " temperature invalid output: " + str(Read_Out[1][0]) + " C")
             T_L = np.append(T_L, T_R)
-        if(T_L != []):
-            T_average = np.append(T_average, np.average(T_L))
-        else:
+        if all(element is None for element in T_L):
             T_average = np.append(T_average, None)
-        Real_Time = Read_Out[0][0]
+        else:
+            T_average = np.append(T_average, np.average(T_L))
+            Real_Time = Read_Out[0][0]
         T_tracker = np.concatenate((T_tracker, T_L.reshape(-1)), axis=0)
-    print(T_average)
-    print(T_tracker)
+    print("Layer average temperature: \n" + str(T_average))
+    #print("all tracker temperature: \n" + str(T_tracker))
     return T_tracker, T_average, Real_Time, x, y, z
 
 def Plot_3d(tracker_temp, T_average, Real_Time, x, y, z, save_path='./tracker_temperature.png'):
@@ -89,7 +92,7 @@ def Plot_3d(tracker_temp, T_average, Real_Time, x, y, z, save_path='./tracker_te
     formatted_time = dt_object.strftime("%Y-%m-%d %H:%M:%S.%f")
 
     ax.set_zlim(0, 10)
-    ax.set_xlabel('BOM side')
+    ax.set_xlabel('BOOM side')
     ax.set_ylabel('Sun panel side')
     ax.set_zlabel('vertical direction')
     ax.set_title('tracker temperature at ' + str(formatted_time))
@@ -105,6 +108,9 @@ def Plot_3d(tracker_temp, T_average, Real_Time, x, y, z, save_path='./tracker_te
 
     ax.set_zticks([])
     save_path = f"./ASIC_T_{formatted_time}.png"
+    # Replace whitespaces and backslashes with underscores
+    save_path = save_path.replace(' ', '_').replace(':', '')
+
     #plt.savefig('./tracker_temperature1.png')
     plt.savefig(save_path)
     #Plot_3d(T_tracker)
