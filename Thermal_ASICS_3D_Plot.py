@@ -1,7 +1,15 @@
+
+"""
+Display tracker temperature
+Aur: Jiancheng Zeng
+Date: Jan 17, 2024
+"""
+
 import os
 from pybfsw.gse.gsequery import GSEQuery  
 from datetime import datetime
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
@@ -58,9 +66,16 @@ def Tracker_T_vector():
                 elif(float(Read_Out[1][0]) > -50 and float(Read_Out[1][0] < 30)):
                     print(str(module_name) + " temperature is " + str(Read_Out[1][0]) + " C")
                     T_R = np.append(T_R, Read_Out[1][0])
-                    x.append(r)
-                    y.append(m)
-                    z.append(9-l)
+                    # Even layers
+                    if(l%2 == 0):
+                        x.append(r)
+                        y.append(5-m)
+                        z.append(9-l)
+                    # Odd layers
+                    else:
+                        x.append(5-m)
+                        y.append(r)
+                        z.append(9-l)
                 else:
                     print(str(module_name) + " temperature invalid output: " + str(Read_Out[1][0]) + " C")
                 #temp_time = Read_Out[0][0]
@@ -108,7 +123,7 @@ def Plot_3d(tracker_temp, T_average, Real_Time, x, y, z, save_path='./tracker_te
             plt.text(0.5, -0.1 - i * 0.03, f'Layer{i} data not available\n', ha='center', va='center', transform=ax.transAxes)
 
     ax.set_zticks([])
-    save_path = f"./ASIC_T_{formatted_time[0]}.png"
+    save_path = f"./3D_{formatted_time[0]}.png"
     # Replace whitespaces and backslashes with underscores
     save_path = save_path.replace(' ', '_').replace(':', '')
 
