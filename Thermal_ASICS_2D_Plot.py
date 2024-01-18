@@ -11,6 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.colors import ListedColormap
 import time
 
 def get_data_from_table(table_name, ti, tf):
@@ -85,37 +86,59 @@ def Plot_2d(T_0, T_1, T_2, T_3, T_4, T_5, T_6, Real_Time, save_path='./tracker_t
     fig, axs = plt.subplots(4, 2, figsize=(15,30))
     fig.suptitle('Temperature profile')
 
-    img_0 = axs[0, 0].imshow(T_0, cmap = 'winter', vmin = -40, vmax = -25)
+    lower_limit = -50
+    upper_limit = 30
+
+    # Create a custom colormap with black for out-of-range values
+    cmap = plt.cm.get_cmap('winter')
+    custom_cmap = cmap.copy()
+    custom_cmap.set_bad(color='black')
+
+    # Set out-of-range values to np.nan
+    T_0[np.logical_or(T_0 < lower_limit, T_0 > upper_limit)] = np.nan
+    img_0 = axs[0, 0].imshow(T_0, cmap = custom_cmap, vmin = -40, vmax = -30)
     plt.colorbar(img_0, orientation='vertical', label='\N{DEGREE SIGN}C')
     axs[0, 0].set_title('Layer-0 at '+ str(formatted_time[0]) + ' \n Radiator Side')
     axs[0 ,0].set_xlabel('SUN Side \n average temperature: ' + str(np.average(T_0[ np.logical_and(T_0 >= -50, T_0 <= 30)])) + 'C')
 
-    img_1 = axs[0, 1].imshow(T_1, cmap = 'winter', vmin = -40, vmax = -30)
+    # Set out-of-range values to np.nan
+    T_1[np.logical_or(T_1 < lower_limit, T_1 > upper_limit)] = np.nan
+    img_1 = axs[0, 1].imshow(T_1, cmap = custom_cmap, vmin = -40, vmax = -30)
     plt.colorbar(img_1, orientation='vertical', label='\N{DEGREE SIGN}C')
     axs[0, 1].set_title('Layer-1 at '+ str(formatted_time[1]) + ' \n Radiator Side')
     axs[0 ,1].set_xlabel('SUN Side \n average temperature: ' + str(np.average(T_1[ np.logical_and(T_1 >= -50, T_1 <= 30)])) + 'C')
 
-    img_2 = axs[1, 0].imshow(T_2, cmap = 'winter', vmin = -40, vmax = -30)
+    # Set out-of-range values to np.nan
+    T_2[np.logical_or(T_2 < lower_limit, T_2 > upper_limit)] = np.nan
+    img_2 = axs[1, 0].imshow(T_2, cmap = custom_cmap, vmin = -40, vmax = -30)
     plt.colorbar(img_2, orientation='vertical', label='\N{DEGREE SIGN}C')
     axs[1, 0].set_title('Layer-2 at '+ str(formatted_time[2]) + ' \n Radiator Side')
     axs[1 ,0].set_xlabel('SUN Side \n average temperature: ' + str(np.average(T_2[ np.logical_and(T_2 >= -50, T_2 <= 30)])) + 'C')
 
-    img_3 = axs[1, 1].imshow(T_3, cmap = 'winter', vmin = -40, vmax = -30)
+    # Set out-of-range values to np.nan
+    T_3[np.logical_or(T_3 < lower_limit, T_3 > upper_limit)] = np.nan
+    img_3 = axs[1, 1].imshow(T_3, cmap = custom_cmap, vmin = -40, vmax = -30)
     plt.colorbar(img_3, orientation='vertical', label='\N{DEGREE SIGN}C')
     axs[1, 1].set_title('Layer-3 at '+ str(formatted_time[3]) + ' \n Radiator Side')
     axs[1 ,1].set_xlabel('SUN Side \n average temperature: ' + str(np.average(T_3[ np.logical_and(T_3 >= -50, T_3 <= 30)])) + 'C')
 
-    img_4 = axs[2, 0].imshow(T_4, cmap = 'winter', vmin = -40, vmax = -30)
+    # Set out-of-range values to np.nan
+    T_4[np.logical_or(T_4 < lower_limit, T_4 > upper_limit)] = np.nan
+    img_4 = axs[2, 0].imshow(T_4, cmap = custom_cmap, vmin = -40, vmax = -30)
     plt.colorbar(img_4, orientation='vertical', label='\N{DEGREE SIGN}C')
     axs[2, 0].set_title('Layer-4 at '+ str(formatted_time[4]) + ' \n Radiator Side')
     axs[2 ,0].set_xlabel('SUN Side \n average temperature: ' + str(np.average(T_4[ np.logical_and(T_4 >= -50, T_4 <= 30)])) + 'C')
 
-    img_5 = axs[2, 1].imshow(T_5, cmap = 'winter', vmin = -40, vmax = -30)
+    # Set out-of-range values to np.nan
+    T_5[np.logical_or(T_5 < lower_limit, T_5 > upper_limit)] = np.nan
+    img_5 = axs[2, 1].imshow(T_5, cmap = custom_cmap, vmin = -40, vmax = -30)
     plt.colorbar(img_5, orientation='vertical', label='\N{DEGREE SIGN}C')
     axs[2, 1].set_title('Layer-5 at '+ str(formatted_time[5]) + ' \n Radiator Side')
     axs[2 ,1].set_xlabel('SUN Side \n average temperature: ' + str(np.average(T_5[ np.logical_and(T_5 >= -50, T_5 <= 30)])) + 'C')
 
-    img_6 = axs[3, 0].imshow(T_6, cmap = 'winter', vmin = -40, vmax = -30)
+    # Set out-of-range values to np.nan
+    T_6[np.logical_or(T_6 < lower_limit, T_6 > upper_limit)] = np.nan
+    img_6 = axs[3, 0].imshow(T_6, cmap = custom_cmap, vmin = -40, vmax = -30)
     plt.colorbar(img_6, orientation='vertical', label='\N{DEGREE SIGN}C')
     axs[3, 0].set_title('Layer-6 at '+ str(formatted_time[6]) + ' \n Radiator Side')
     axs[3 ,0].set_xlabel('SUN Side \n average temperature: ' + str(np.average(T_6[ np.logical_and(T_6 >= -50, T_6 <= 30)])) + 'C')
