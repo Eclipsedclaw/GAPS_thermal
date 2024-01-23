@@ -82,6 +82,7 @@ def Tracker_T_vector():
             T_L = np.append(T_L, T_R)
         if all(element is None for element in T_L):
             T_average = np.append(T_average, None)
+            Real_Time = np.append(Real_Time, None)
         else:
             T_average = np.append(T_average, np.average(T_L))
             Real_Time = np.append(Real_Time, Read_Out[0][0] - 5 * 3600)
@@ -105,7 +106,7 @@ def Plot_3d(tracker_temp, T_average, Real_Time, x, y, z, save_path='./tracker_te
     cb = fig.colorbar(colmap, cax=fig.add_axes([0.05, 0.1, 0.03, 0.8]), label='\N{DEGREE SIGN}C')
 
     # Convert Unix timestamps to datetime objects and format as strings
-    formatted_time = [datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S.%f") for timestamp in Real_Time]
+    formatted_time = [datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S.%f") if timestamp is not None else None for timestamp in Real_Time]
 
     ax.set_zlim(0, 10)
     ax.set_xlabel('BOOM side')
@@ -118,6 +119,7 @@ def Plot_3d(tracker_temp, T_average, Real_Time, x, y, z, save_path='./tracker_te
         if temperature is not None:
             # If the value is not None, plot the temperature
             plt.text(0.5, -0.1 - i * 0.03, f'Layer{i} average temperature {temperature:.2f}\N{DEGREE SIGN}C at {temperature_time}\n', ha='center', va='center', transform=ax.transAxes)
+            #print(i)
         else:
             # If the value is None, display a message indicating missing data
             plt.text(0.5, -0.1 - i * 0.03, f'Layer{i} data not available\n', ha='center', va='center', transform=ax.transAxes)
