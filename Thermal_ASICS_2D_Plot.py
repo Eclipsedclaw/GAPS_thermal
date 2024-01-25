@@ -182,7 +182,9 @@ if __name__ == "__main__":
         print("Invalid datetime format. Please enter the value in the format 'YYYY-MM-DD HH:mm:ss.SSS'")
 
     ti = ti_timestamp.timestamp()
-    tf = int(time.time())
+    tf = ti + 60 * 5
+    # set searching range to current time
+    #tf = int(time.time())
 
     T_0, T_1, T_2, T_3, T_4, T_5, T_6, Real_Time = Tracker_T_vector_layer()
 
