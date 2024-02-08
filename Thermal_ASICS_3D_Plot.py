@@ -107,12 +107,13 @@ def Plot_3d(tracker_temp, T_average, Real_Time, x, y, z, save_path='./tracker_te
 
     # Convert Unix timestamps to datetime objects and format as strings
     formatted_time = [datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S.%f") if timestamp is not None else None for timestamp in Real_Time]
+    save_time = next((x for x in formatted_time if x is not None), None)
 
     ax.set_zlim(0, 10)
     ax.set_xlabel('BOOM side')
     ax.set_ylabel('Sun panel side')
     ax.set_zlabel('vertical direction')
-    ax.set_title('tracker temperature at ' + str(formatted_time[0]))
+    ax.set_title('tracker temperature at ' + str(save_time))
 
     # Iterate over the indices of T_average
     for i, (temperature, temperature_time) in enumerate(zip(T_average, formatted_time)):
@@ -125,7 +126,7 @@ def Plot_3d(tracker_temp, T_average, Real_Time, x, y, z, save_path='./tracker_te
             plt.text(0.5, -0.1 - i * 0.03, f'Layer{i} data not available\n', ha='center', va='center', transform=ax.transAxes)
 
     ax.set_zticks([])
-    save_path = f"./3D_{formatted_time[0]}.png"
+    save_path = f"./3D_{save_time}.png"
     # Replace whitespaces and backslashes with underscores
     save_path = save_path.replace(' ', '_').replace(':', '')
 
